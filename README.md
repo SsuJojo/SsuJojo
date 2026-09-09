@@ -36,7 +36,7 @@ I build practical software around AI products, automation, and full-stack protot
 
 一个真实运行中的校园产品，重点练习了 Next.js、React、数据流与部署闭环。项目仓库目前为私有仓库。
 
-- 在线入口：<https://ct.jzhw.zdzd.xyz>
+- 在线入口：<https://jzhw.zszs.uno/canteen>
 - 项目源码：私有仓库（JZHW_Canteen）
 
 ---

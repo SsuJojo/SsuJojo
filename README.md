@@ -3,6 +3,10 @@
 > 用 AI、自动化和全栈工程，把真实问题做成可以使用的产品。  
 > Building useful products with AI, automation, and full-stack engineering.
 
+[![GitHub stats](https://github-readme-stats.vercel.app/api?username=SsuJojo&show_icons=true&theme=radical&hide_border=true&include_private=false)](https://github.com/SsuJojo)
+[![Top languages](https://github-readme-stats.vercel.app/api/top-langs/?username=SsuJojo&layout=compact&theme=radical&hide_border=true&include_private=false)](https://github.com/SsuJojo)
+[![Contribution streak](https://github-readme-streak-stats.herokuapp.com/?user=SsuJojo&theme=radical&hide_border=true)](https://github.com/SsuJojo)
+
 我是一名持续做项目的开发者，主要关注：
 
 - AI 产品与面试训练工具
@@ -11,6 +15,32 @@
 - 把个人需求打磨成可复现、可维护的工程
 
 I build practical software around AI products, automation, and full-stack prototypes—from the first working demo to a more reliable product.
+
+---
+
+## 项目宇宙 · Project universe
+
+```mermaid
+flowchart LR
+    Core((SsuJojo))
+    Core --- AI["AI / LLM<br/>AI-Interview · doubaoime-asr · claude-watch"]
+    Core --- Auto["Automation<br/>web-inputer · PriceAI-Monitor · voice-to-order"]
+    Core --- Web["Web / Full-stack<br/>MirrorSelf · JZHW Canteen · NetMount"]
+    Core --- Skill["Agent Skills<br/>everything-skill · xuezhewang-skill · AI-Interview-skill"]
+    Core --- Infra["Infra / Proxy<br/>codex-proxy · CloudFlare-ImgBed · vercel-api-proxy"]
+    Core --- Play["Cyber toys<br/>Roco Market Watcher · miband4 · baritone"]
+```
+
+---
+
+## 最近在折腾 · Recently shipping
+
+<!-- 由 .github/workflows/profile-activity.yml 每日自动更新；也支持在 Actions 页面手动触发。 -->
+<!-- START RECENT ACTIVITY PLACEHOLDER -->
+最近动态会由 GitHub Actions 写入 `.github/profile/RECENT-ACTIVITY.md` 并同步到这里。
+
+[查看最近公开提交](https://github.com/SsuJojo?tab=activity)
+<!-- END RECENT ACTIVITY PLACEHOLDER -->
 
 ---
 

@@ -1,0 +1,76 @@
+name: Update profile activity
+
+on:
+  schedule:
+    - cron: "23 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-activity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+
+      - name: Fetch latest public activity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          mkdir -p .github/profile
+          output=".github/profile/RECENT-ACTIVITY.md"
+
+          {
+            echo "<!-- START RECENT ACTIVITY -->"
+            echo "| 时间（UTC） | 仓库 | 最新公开提交 |"
+            echo "| --- | --- | --- |"
+          } > "$output"
+
+          repos=$(
+            curl -fsSL \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/users/${GITHUB_REPOSITORY_OWNER}/repos?per_page=100&type=owner&sort=pushed" \
+              | jq -r '.[] | select(.fork == false) | .name'
+          )
+
+          added=0
+          while IFS= read -r repo; do
+            [ -z "$repo" ] && continue
+            commit_json=$(
+              curl -fsSL \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer $GH_TOKEN" \
+                "https://api.github.com/repos/${GITHUB_REPOSITORY_OWNER}/${repo}/commits?per_page=1"
+            )
+            message=$(printf '%s' "$commit_json" | jq -r '.[0].commit.message // empty | split("\n")[0]')
+            [ -z "$message" ] && continue
+            date=$(printf '%s' "$commit_json" | jq -r '.[0].commit.committer.date // empty')
+            url=$(printf '%s' "$commit_json" | jq -r '.[0].html_url // empty')
+            message=${message//|/\\|}
+            echo "| ${date} | [${repo}](https://github.com/${GITHUB_REPOSITORY_OWNER}/${repo}) | [${message}](${url}) |" >> "$output"
+            added=$((added + 1))
+            [ "$added" -ge 5 ] && break
+          done <<< "$repos"
+
+          if [ "$added" -eq 0 ]; then
+            echo "| - | 暂无可展示的公开提交 | - |" >> "$output"
+          fi
+
+          echo "<!-- END RECENT ACTIVITY -->" >> "$output"
+
+      - name: Commit changes if any
+        run: |
+          git add .github/profile/RECENT-ACTIVITY.md
+          if git diff --cached --quiet; then
+            echo "No activity changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: refresh profile activity"
+          git push

@@ -26,6 +26,8 @@ jobs:
 
           {
             echo "<!-- START RECENT ACTIVITY -->"
+            echo "上次更新：$(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo ""
             echo "| 时间（UTC） | 仓库 | 最新公开提交 |"
             echo "| --- | --- | --- |"
           } > "$output"
@@ -63,9 +65,30 @@ jobs:
 
           echo "<!-- END RECENT ACTIVITY -->" >> "$output"
 
+      - name: Sync activity into README
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          readme_path = Path("README.md")
+          activity_path = Path(".github/profile/RECENT-ACTIVITY.md")
+          readme = readme_path.read_text(encoding="utf-8")
+          activity = activity_path.read_text(encoding="utf-8").strip()
+
+          start = "<!-- START RECENT ACTIVITY PLACEHOLDER -->"
+          end = "<!-- END RECENT ACTIVITY PLACEHOLDER -->"
+          start_index = readme.index(start)
+          end_index = readme.index(end, start_index) + len(end)
+
+          readme_path.write_text(
+              readme[:start_index] + start + "\n" + activity + "\n" + end + readme[end_index:],
+              encoding="utf-8",
+          )
+          PY
+
       - name: Commit changes if any
         run: |
-          git add .github/profile/RECENT-ACTIVITY.md
+          git add README.md .github/profile/RECENT-ACTIVITY.md
           if git diff --cached --quiet; then
             echo "No activity changes."
             exit 0
